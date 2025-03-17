@@ -91,3 +91,28 @@
 .submit:hover{
     background-color: #2e7d32;
 }
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    animation: fadeIn 0.5s;
+}
+
+.success-notification {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.error-notification {
+    background-color: #f44336;
+    color: white;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(-20px);}
+    to {opacity: 1; transform: translateY(0);}
+}

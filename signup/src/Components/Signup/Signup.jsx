@@ -14,12 +14,53 @@ const Signup = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword]= useState('')
 
+    const [showSuccessNotification, setShowSuccessNotification] = useState(false);
+    const [showErrorNotification, setShowErrorNotification] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
     function handleSignup(event) {
-        event.preventDefault()
-        const requestBody = {email, password}
-        axios.post('http://localhost:8081/signup',  requestBody)
-        .then(res => console.log(res))
-        .catch(err => console.error(err));
+        event.preventDefault();
+        
+        // Create the data object using the state values
+        const userData = {
+            username: username,
+            email: email,
+            password: password
+        };
+
+         // Make the POST request using axios
+        axios.post('http://localhost:8080/signup', userData, {
+            headers: {
+              "Accept": "*/*",
+              "Content-Type": "application/json",
+            },
+          })
+        .then(response => {
+            // On success, show notification
+            setShowSuccessNotification(true);
+            
+            // Set a timeout to hide the notification after 4 seconds
+            setTimeout(() => {
+                setShowSuccessNotification(false);
+                // Refresh the page after hiding the notification
+                window.location.reload();
+            }, 4000);
+        })
+        .catch(error => {
+            // On error, log the error to console
+            console.log(error);
+            
+            // Set error message
+            setErrorMessage(error.response?.data?.error || 'An error occurred during signup');
+            
+            // Show error notification
+            setShowErrorNotification(true);
+            
+            // Hide error notification after 4 seconds
+            setTimeout(() => {
+                setShowErrorNotification(false);
+            }, 4000);
+        });
     }
 
   return (
@@ -48,6 +89,16 @@ const Signup = () => {
                 <button type="submit" className="submit">Sign Up</button>
             </div>
         </form>
+        {showSuccessNotification && (
+            <div className="notification success-notification">
+                Signup successful!
+            </div>
+        )}
+        {showErrorNotification && (
+            <div className="notification error-notification">
+                {errorMessage}
+            </div>
+        )}
     </div>
   )
 }
